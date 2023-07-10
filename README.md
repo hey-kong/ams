@@ -1,12 +1,12 @@
-# Real-Time Video Inference on Edge Devices via Adaptive Model Streaming
-![demo](demo.png)
+# DeeplabV3
+
+*Reference:* **Real-Time Video Inference on Edge Devices via Adaptive Model Streaming**
+
 ## Table of Contents
 - [Installation](#installation)
 - [Running AMS](#running-ams)
 - [Models & Checkpoints](#models-&-checkpoints)
 - [Datasets](#datasets)
-- [Citation](#citation)
-- [References](#references)
 
 ## Installation
 For installing the required packages using [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html), use:
@@ -23,29 +23,12 @@ For running the code, use:
 conda activate ams
 python run.py --help
 ```
-## Extracting labels
-To speed up experiments, we first extract teacher inferred labels from video frames and save them for future use. 
-We define each video by a number (`VIDEO_NUM`) and a name (`VIDEO_NAME`). 
-Together they are used to ID a video (e.g `12` and `la`, `12-la.mp4`) and 
-load meta information such as video length and class labels (from `exp_configs.py`). 
-Videos from the four datasets described below have already been added. 
 
-Finally, to extract the labels, use this command:
-```
-python ams/extract_labels.py --input_video PATH_TO_VIDEO/VIDEO_NUM-VIDEO_NAME.mp4 
---dump_path PATH_TO_GT/VIDEO_NUM-VIDEO_NAME/ --teacher_checkpoint PATH_TO_TEACHER_MODEL
-```
 ## Models & Checkpoints
 ### Student
 For lightweight (student) models we use DeeplabV3 with MobileNetV2 backbone. We use official pretrained checkpoints released in Deeplab's github repo [here](https://github.com/tensorflow/models/tree/master/research/deeplab/g3doc/model_zoo.md). For compatibilty with `TF1` and our code, you may directly use the following checkpoints:
 - [DeeplabV3 with MobileNetV2 backbone pretrained on Cityscapes](./checkpoints/deeplabv3_mobilenetv2_cityscapes)
-- [DeeplabV3 with MobileNetV2 backbone pretrained on PASCAL VOC 2012](./checkpoints/deeplabv3_mobilenetv2_pascalvoc2012)
-
-### Teacher
-For the teacher model, we use DeeplabV3 with Xception65 backbone for Outdoor Scenes, Cityscapes, and A2D2 datasets. For a compatible teacher checkpoint, use:
-- [DeeplabV3 with Xception65 backbone pretrained on Cityscapes](https://drive.google.com/drive/folders/1w0O_FTRUM3rWmeMVm9C_iLqjr1QD21xW?usp=sharing)
-
-For the LVS dataset, we follow Mullapedi et al. [3] in using Mask R-CNN as the teacher and directly use the teacher labels they provide.
+- [DeeplabV3 with MobileNetV2 backbone pretrained on A2D2](./checkpoints/deeplabv3_mobilenetv2_a2d2)
 
 ## Datasets
 ### Outdoor Scenes
@@ -66,23 +49,3 @@ We use the entire Frankfurt unlabeled long video sequence from the Cityscapes da
 
 ### A2D2
 We use the entire video sequence of front center cameras at [Gaimersheim](https://aev-autonomous-driving-dataset.s3.eu-central-1.amazonaws.com/camera_lidar-20180810150607_camera_frontcenter.tar), [Ingolstadt](https://aev-autonomous-driving-dataset.s3.eu-central-1.amazonaws.com/camera_lidar-20190401145936_camera_frontcenter.tar), and [Munich](https://aev-autonomous-driving-dataset.s3.eu-central-1.amazonaws.com/camera_lidar-20190401121727_camera_frontcenter.tar) from the Audi Autonomous Driving Dataset (A2D2) [2].
-
-### LVS
-For downloading the Long Videos Dataset (LVS) [1], you may check [here](http://graphics.cs.cmu.edu/projects/lvsdataset/).
-
-## Citation
-You can cite this work using:
-```
-@inproceedings{khani2021real,
-  title={Real-Time Video Inference on Edge Devices via Adaptive Model Streaming},
-  author={Khani, Mehrdad and Hamadanian, Pouya and Nasr-Esfahany, Arash and Alizadeh, Mohammad},
-  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
-  pages={4572--4582},
-  year={2021}
-}
-```
-
-## References
-1. Cordts, M., Omran, M., Ramos, S., Rehfeld, T., Enzweiler, M., Benenson, R., Franke, U., Roth, S. and Schiele, B., 2016. The cityscapes dataset for semantic urban scene understanding. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 3213-3223).
-2. Geyer, J., Kassahun, Y., Mahmudi, M., Ricou, X., Durgesh, R., Chung, A.S., Hauswald, L., Pham, V.H., Mühlegg, M., Dorn, S. and Fernandez, T., 2020. A2d2: Audi autonomous driving dataset. arXiv preprint arXiv:2004.06320.
-3. Mullapudi, R.T., Chen, S., Zhang, K., Ramanan, D. and Fatahalian, K., 2019. Online model distillation for efficient video inference. In Proceedings of the IEEE/CVF International Conference on Computer Vision (pp. 3573-3582).
